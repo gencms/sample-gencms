@@ -1,0 +1,251 @@
+    html {
+      background: url(../images/bg.png) repeat;       
+    }
+
+    body {
+      padding-top: 20px;
+      font-size: 16px;
+      font-family: "Open Sans",serif;
+      background: transparent;
+    }
+
+    h1 {
+      font-family: "Abel", Arial, sans-serif;
+      font-weight: 400;
+      font-size: 40px;
+    }
+
+    .logo {
+      /*width: 400px;*/
+      height: 80px;
+      overflow: hidden;
+
+      margin-left: -15px;
+      margin-bottom: 5px;
+    }
+
+    .logo img{      
+      
+    }
+
+    .logo h1.slogan {
+        display: inline-block;
+        margin-left: 5px;
+    }
+
+    /* Override B3 .panel adding a subtly transparent background */
+    .panel {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+    }
+
+
+    .panel .head {
+      border-bottom: 1px solid #428bca; 
+    }
+
+    .margin-base-vertical {
+      margin: 40px 0;
+    }
+
+    #cms_menu {
+      background: rgba(255,255,255, 0.7);
+      margin-bottom: 5px;
+    }
+
+    #cms_content_area {
+      min-height: 400px;
+      padding: 15px;
+    }
+
+    #cms_menu .nav-pills>li>a {
+      border-radius: 0px;
+    }
+
+    #footer {
+      text-align: center;
+    }
+
+
+    form div {
+        /* clear: both; */
+        margin-bottom: 0.7em;
+        vertical-align: text-top;
+    }
+
+/*Alerts styles*/
+
+.alert, .alert-heading {
+  color: #c09853;
+}
+.alert .close {
+  position: relative;
+  top: -2px;
+  right: -10px;
+  line-height: 18px;
+}
+.alert-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+.alert-success, .alert-success .alert-heading {
+  color: #468847;
+}
+.alert-danger, .alert-error {
+  background-color: #f2dede;
+  border-color: #eed3d7;
+}
+.alert-danger,
+.alert-error,
+.alert-danger .alert-heading,
+.alert-error .alert-heading {
+  color: #b94a48;
+}
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+.alert-info, .alert-info .alert-heading {
+  color: #3a87ad;
+}
+.alert-block {
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.alert-block > p, .alert-block > ul {
+  margin-bottom: 0;
+}
+.alert-block p + p {
+  margin-top: 5px;
+}
+
+
+
+/** Pagination Styles */
+
+.pagination {
+  height: 36px;
+  margin: 18px 0;
+}
+
+
+.pagination ul {
+  /*display: inline-block;*/
+  *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+  margin-left: 0;
+  margin-bottom: 0;
+  /*-webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;*/
+  /*-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);*/
+}
+
+.pagination li {
+  display: inline;
+}
+.pagination a {
+  float: left;
+  padding: 0 14px;
+  line-height: 34px;
+  text-decoration: none;
+  border: 1px solid #ddd;
+  border-left-width: 0;
+}
+.pagination a:hover,
+.pagination .active a {
+  background-color: #f5f5f5;
+}
+.pagination .active a {
+  color: #999999;
+  cursor: default;
+}
+.pagination .disabled span,
+.pagination .disabled a,
+.pagination .disabled a:hover {
+  color: #999999;
+  background-color: transparent;
+  cursor: default;
+}
+.pagination li:first-child a {
+  border-left-width: 1px;
+  -webkit-border-radius: 3px 0 0 3px;
+  -moz-border-radius: 3px 0 0 3px;
+  border-radius: 3px 0 0 3px;
+}
+.pagination li:last-child a {
+  -webkit-border-radius: 0 3px 3px 0;
+  -moz-border-radius: 0 3px 3px 0;
+  border-radius: 0 3px 3px 0;
+}
+.pagination-centered {
+  text-align: center;
+}
+.pagination-right {
+  text-align: right;
+}
+.pager {
+  margin-left: 0;
+  margin-bottom: 18px;
+  list-style: none;
+  text-align: center;
+  *zoom: 1;
+}
+.pager:before,
+.pager:after {
+  display: table;
+  content: "";
+}
+.pager:after {
+  clear: both;
+}
+.pager li {
+  display: inline;
+}
+.pager a {
+  display: inline-block;
+  padding: 5px 14px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+}
+.pager a:hover {
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+.pager .next a {
+  float: right;
+}
+.pager .previous a {
+  float: left;
+}
+.pager .disabled a,
+.pager .disabled a:hover {
+  color: #999999;
+  background-color: #fff;
+  cursor: default;
+}
+
+.row > [class*="span"] {
+  display: inline;
+  float: left;
+  margin-left: 20px;
+}
+
+
+.span8 {
+  width: 546px;
+}
+
+
+.thumb {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+}
