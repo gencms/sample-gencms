@@ -81,15 +81,13 @@
 		 * @return   	  : json_data
 		 */
 
-		function items() {		
-
-								
-			        $join_items[] = array(
-			                 "table"        =>  "news_category"
-			                ,"key_field"    =>  "news_category_id"
-			                ,"mapped_field" =>  "news_category"
-			                ,"join_type"    =>  "inner"
-			        );
+		function items() {										
+		        $join_items[] = array(
+		                 "table"        =>  "news_category"
+		                ,"key_field"    =>  "news_category_id"
+		                ,"mapped_field" =>  "news_category"
+		                ,"join_type"    =>  "inner"
+		        );
 				
 				$aColumns = array(news_id,title,picture,category_name,news_date,active,1);	
     
@@ -98,31 +96,39 @@
 
 		    $sTable = "news";
 
+		    #Get post variables
+		    $iDisplayStart		=	$this->input->post("iDisplayStart", true);
+		    $iDisplayLength		=	$this->input->post("iDisplayLength", true);
+		    $iSortCol_0		=	$this->input->post("iSortCol_0", true);
+		    $iSortingCols		=	$this->input->post("iSortingCols", true);
+		    $sSearch 		=	$this->input->post("sSearch", true);
+		    $sEcho		=	$this->input->post("sEcho");
+		    $numColumns		=	count($aColumns);
+
+
 		    /* 
 		     * Paging
 		     */
 		    $sLimit = "";
-		    if ( isset( $_POST["iDisplayStart"] ) && $_POST["iDisplayLength"] != "-1" )
+		    if ( isset( $iDisplayStart ) && $iDisplayLength != "-1" )
 		    {
-		        $sLimit = "LIMIT ".mysql_real_escape_string( $_POST["iDisplayStart"] ).", ".
-		            		       mysql_real_escape_string( $_POST["iDisplayLength"] );
-
-		        $sql_data["offset"]  = mysql_real_escape_string( $_POST["iDisplayStart"] );
-		        $sql_data["perpage"] = mysql_real_escape_string( $_POST["iDisplayLength"] );    		       
-
+		        $sLimit = "LIMIT ".mysql_real_escape_string( $iDisplayStart ).", ".
+		            		       mysql_real_escape_string( $iDisplayLength );
 		    }
+
+
 
 		    /*
 		     * Ordering
 		     */
-		    if ( isset( $_POST["iSortCol_0"] ) )
+		    if ( isset( $iSortCol_0 ) )
 		    {
 		        $sOrder = "ORDER BY  ";
-		        for ( $i=0 ; $i<intval( $_POST["iSortingCols"] ) ; $i++ )
+		        for ( $i=0 ; $i<intval( $iSortingCols ) ; $i++ )
 		        {
-		            if ( $_POST[ "bSortable_".intval($_POST["iSortCol_".$i]) ] == "true" )
+		            if ( $this->input->post( "bSortable_".intval($this->input->post("iSortCol_".$i, true) ), true ) == "true" )
 		            {
-		                $sOrder .= $aColumns[ intval( $_POST["iSortCol_".$i] ) ]." ".mysql_real_escape_string( $_POST["sSortDir_".$i] ) .", ";		                
+		                $sOrder .= $aColumns[ intval( $this->input->post("iSortCol_".$i) ) ]." ".mysql_real_escape_string( $this->input->post("sSortDir_".$i) ) .", ";		                
 		            }
 		        }
 		        
@@ -131,8 +137,8 @@
 		        {
 		            $sOrder = "";
 		        }
-		        $sql_data["order"] = $sOrder;
 		    }
+		    
 
 
 		    /* 
@@ -142,12 +148,12 @@
 		     * on very large tables, and MySQLs regex functionality is very limited
 		     */
 		  
-		    if ( $_POST["sSearch"] != "" )
+		    if ( $sSearch != "" )
 		    {
 		        $sWhere .= "WHERE (";
-		        for ( $i=0 ; $i<count($aColumns) ; $i++ )
+		        for ( $i=0 ; $i<$numColumns ; $i++ )
 		        {
-		            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string( $_POST["sSearch"] )."%' OR ";
+		            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string( $sSearch )."%' OR ";
 		        }
 		        $sWhere = substr_replace( $sWhere, "", -3 );
 		        $sWhere .= ")";
@@ -155,9 +161,9 @@
 
 		    
 		    /* Individual column filtering */
-		    for ( $i=0 ; $i<count($aColumns) ; $i++ )
+		    for ( $i=0 ; $i<$numColumns ; $i++ )
 		    {
-		        if ( $_POST["bSearchable_".$i] == "true" && $_POST["sSearch_".$i] != "" )
+		        if ( $this->input->post("bSearchable_".$i) == "true" && $this->input->post("sSearch_".$i) != "" )
 		        {
 		            if ( $sWhere == "" )
 		            {
@@ -167,12 +173,13 @@
 		            {
 		                $sWhere .= " AND ";
 		            }
-		            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string($_POST["sSearch_".$i])."%' ";
+		            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string($this->input->post("sSearch_".$i))."%' ";
 		        }
 		    }
-		    $sql_data["where"] = $sWhere;
 
-
+		    /*
+		     * Joins
+		     */
 		    if (!empty($join_items)) {
 		    	$sJoins = "";
 		    	foreach ($join_items as $item) {
@@ -226,7 +233,7 @@
 		     * Output
 		     */
 		    $output = array(
-		        "sEcho" => intval($_POST["sEcho"]),
+		        "sEcho" => intval($sEcho),
 		        "iTotalRecords" => $iTotal,
 		        "iTotalDisplayRecords" => $iFilteredTotal,
 		        "aaData" => array()
@@ -235,7 +242,7 @@
 
 		    foreach ($rResult->result_array() as $aRow) {
 		    	$row = array();		    	
-		    	for ( $i=0 ; $i<count($aColumns) ; $i++ )
+		    	for ( $i=0 ; $i<$numColumns ; $i++ )
 		        {
 		            if ( $aColumns[$i] == "version" )
 		            {
