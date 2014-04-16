@@ -82,14 +82,14 @@
 		 */
 
 		function items() {										
-		        $join_items[] = array(
-		                 "table"        =>  "news_category"
-		                ,"key_field"    =>  "news_category_id"
-		                ,"mapped_field" =>  "news_category"
-		                ,"join_type"    =>  "inner"
-		        );
-				
-				$aColumns = array(news_id,title,picture,category_name,news_date,active,1);	
+	        $join_items[] = array(
+	                 "table"        =>  "news_category"
+	                ,"key_field"    =>  "news_category_id"
+	                ,"mapped_field" =>  "news_category"
+	                ,"join_type"    =>  "inner"
+	        );
+			
+			$aColumns = array(news_id,title,picture,category_name,news_date,active,1);	
     
 		    /* Indexed column (used for fast and accurate table cardinality) */
 		    $sIndexColumn = "news_id";
