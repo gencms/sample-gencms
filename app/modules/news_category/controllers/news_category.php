@@ -77,165 +77,29 @@
 		function items() {		
 
 			
-				$aColumns = array(news_category_id,category_name,1);	
+			$aColumns = array(news_category_id,category_name,1);	
     
 		    /* Indexed column (used for fast and accurate table cardinality) */
 		    $sIndexColumn = "news_category_id";
 
 		    $sTable = "news_category";
 
-		    /* 
-		     * Paging
-		     */
-		    $sLimit = "";
-		    if ( isset( $_POST["iDisplayStart"] ) && $_POST["iDisplayLength"] != "-1" )
-		    {
-		        $sLimit = "LIMIT ".mysql_real_escape_string( $_POST["iDisplayStart"] ).", ".
-		            		       mysql_real_escape_string( $_POST["iDisplayLength"] );
-
-		        $sql_data["offset"]  = mysql_real_escape_string( $_POST["iDisplayStart"] );
-		        $sql_data["perpage"] = mysql_real_escape_string( $_POST["iDisplayLength"] );    		       
-
-		    }
-
-		    /*
-		     * Ordering
-		     */
-		    if ( isset( $_POST["iSortCol_0"] ) )
-		    {
-		        $sOrder = "ORDER BY  ";
-		        for ( $i=0 ; $i<intval( $_POST["iSortingCols"] ) ; $i++ )
-		        {
-		            if ( $_POST[ "bSortable_".intval($_POST["iSortCol_".$i]) ] == "true" )
-		            {
-		                $sOrder .= $aColumns[ intval( $_POST["iSortCol_".$i] ) ]." ".mysql_real_escape_string( $_POST["sSortDir_".$i] ) .", ";		                
-		            }
-		        }
-		        
-		        $sOrder = substr_replace( $sOrder, "", -2 );
-		        if ( $sOrder == "ORDER BY" )
-		        {
-		            $sOrder = "";
-		        }
-		        $sql_data["order"] = $sOrder;
-		    }
-
-
-		    /* 
-		     * Filtering
-		     * NOTE this does not match the built-in DataTables filtering which does it
-		     * word by word on any field. Its possible to do here, but concerned about efficiency
-		     * on very large tables, and MySQLs regex functionality is very limited
-		     */
-		  
-		    if ( $_POST["sSearch"] != "" )
-		    {
-		        $sWhere .= "WHERE (";
-		        for ( $i=0 ; $i<count($aColumns) ; $i++ )
-		        {
-		            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string( $_POST["sSearch"] )."%' OR ";
-		        }
-		        $sWhere = substr_replace( $sWhere, "", -3 );
-		        $sWhere .= ")";
-		    }
-
-		    
-		    /* Individual column filtering */
-		    for ( $i=0 ; $i<count($aColumns) ; $i++ )
-		    {
-		        if ( $_POST["bSearchable_".$i] == "true" && $_POST["sSearch_".$i] != "" )
-		        {
-		            if ( $sWhere == "" )
-		            {
-		                $sWhere = "WHERE ";
-		            }
-		            else
-		            {
-		                $sWhere .= " AND ";
-		            }
-		            $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string($_POST["sSearch_".$i])."%' ";
-		        }
-		    }
-		    $sql_data["where"] = $sWhere;
-
-
-		    if (!empty($join_items)) {
-		    	$sJoins = "";
-		    	foreach ($join_items as $item) {
-		    		$tbl = $item["table"];
-		            $mapped = $item["mapped_field"];
-		            $key = $item["key_field"];
-		            $join = $item["join_type"];
-
-		            $sJoins .= " $join JOIN $tbl ON $sTable.$mapped = $tbl.$key ";
-		    	}
-		    }
-
-		    /*
-		     * SQL queries
-		     * Get data to display
-		     */
-		    $sQuery = "
-		        SELECT SQL_CALC_FOUND_ROWS ".str_replace(" , ", " ", implode(", ", $aColumns))."
-		        FROM   $sTable
-		        $sJoins
-		        $sWhere
-		        $sOrder
-		        $sLimit
-		    ";
-
-		    $rResult = $this->news_category_model->run_sql($sQuery);
-		    
-
-		    /* Data set length after filtering */
-		    $sQuery = "
-		        SELECT FOUND_ROWS() as total
-		    ";
-
-		    $rResultFilterTotal = $this->news_category_model->run_sql($sQuery);
-
-		    $iFilteredTotal = $rResultFilterTotal->row()->total;
-		    
-		    /* Total data set length */
-		    $sQuery = "
-		        SELECT COUNT(".$sIndexColumn.") as total
-		        FROM   $sTable
-		    ";
-
-		    $rResultTotal = $this->news_category_model->run_sql($sQuery);
-		    
-
-		    $iTotal = $rResultTotal->row()->total;
-
-
-		    /*
-		     * Output
-		     */
-		    $output = array(
-		        "sEcho" => intval($_POST["sEcho"]),
-		        "iTotalRecords" => $iTotal,
-		        "iTotalDisplayRecords" => $iFilteredTotal,
-		        "aaData" => array()
+		    #Get post variables and add them to the sql_data array to pass to the model		    
+		    $sql_data = array(
+		    	 "iDisplayStart"	=>	$this->input->post("iDisplayStart", true)
+		    	,"iDisplayLength"	=>	$this->input->post("iDisplayLength", true)
+		    	,"iSortCol_0"	=>	$this->input->post("iSortCol_0", true)
+		    	,"iSortingCols"	=>	$this->input->post("iSortingCols", true)
+		    	,"sSearch"	=>	$this->input->post("sSearch", true)
+		    	,"sEcho"	=>	$this->input->post("sEcho")
+		    	,"numColumns"	=>	count($aColumns)
+		    	,"sTable"	=>	$sTable
+		    	,"sIndexColumn"	=>	$sIndexColumn
+		    	,"aColumns"	=>	$aColumns
+		//    	,"join_items"	=>	$join_items
 		    );
 		    
-
-		    foreach ($rResult->result_array() as $aRow) {
-		    	$row = array();		    	
-		    	for ( $i=0 ; $i<count($aColumns) ; $i++ )
-		        {
-		            if ( $aColumns[$i] == "version" )
-		            {
-		                /* Special output formatting for "version" column */
-		                $row[] = ($aRow[ $aColumns[$i] ]=="0") ? "-" : $aRow[ $aColumns[$i] ];
-		            }
-		            else if ( $aColumns[$i] != " " )
-		            {
-		                /* General output */
-		                $row[] = $aRow[ $aColumns[$i] ];
-		            }
-		        }
-		        $output["aaData"][] = $row;
-		    }
+		    $output = $this->news_category_model->get_items($sql_data);
 		    
 		    echo json_encode( $output );				        										       
 		}	
