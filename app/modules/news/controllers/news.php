@@ -178,8 +178,7 @@
 					}//end ifelse success upload                
 				}
 				else {
-					if( empty($news_id) )
-					;
+					if( empty($news_id) ) ;
 				}
 						
 
