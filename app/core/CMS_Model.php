@@ -27,10 +27,8 @@ class CMS_Model extends CI_Model {
         $sLimit = "";
         if ( isset( $iDisplayStart ) && $iDisplayLength != "-1" )
         {
-            $sLimit = "LIMIT ".mysql_real_escape_string( $iDisplayStart ).", ".
-                               mysql_real_escape_string( $iDisplayLength );
+            $sLimit = "LIMIT ". $iDisplayStart .", ". $iDisplayLength ;
         }
-
 
 
         /*
@@ -43,7 +41,7 @@ class CMS_Model extends CI_Model {
             {
                 if ( $this->input->post( "bSortable_".intval($this->input->post("iSortCol_".$i, true) ), true ) == "true" )
                 {
-                    $sOrder .= $aColumns[ intval( $this->input->post("iSortCol_".$i) ) ]." ".mysql_real_escape_string( $this->input->post("sSortDir_".$i) ) .", ";                      
+                    $sOrder .= $aColumns[ intval( $this->input->post("iSortCol_".$i) ) ]." ". $this->input->post("sSortDir_".$i, true) .", ";                                          
                 }
             }
             
@@ -65,10 +63,10 @@ class CMS_Model extends CI_Model {
       
         if ( $sSearch != "" )
         {
-            $sWhere .= "WHERE (";
+            $sWhere .= " WHERE (";
             for ( $i=0 ; $i<$numColumns ; $i++ )
             {
-                $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string( $sSearch )."%' OR ";
+                $sWhere .= $aColumns[$i]." LIKE '%".$this->db->escape_like_str( $sSearch )."%' OR ";
             }
             $sWhere = substr_replace( $sWhere, "", -3 );
             $sWhere .= ")";
@@ -78,7 +76,7 @@ class CMS_Model extends CI_Model {
         /* Individual column filtering */
         for ( $i=0 ; $i<$numColumns ; $i++ )
         {
-            if ( $this->input->post("bSearchable_".$i) == "true" && $this->input->post("sSearch_".$i) != "" )
+            if ( $this->input->post("bSearchable_".$i) == "true" && $this->input->post("sSearch_".$i, true) != "" )
             {
                 if ( $sWhere == "" )
                 {
@@ -88,9 +86,10 @@ class CMS_Model extends CI_Model {
                 {
                     $sWhere .= " AND ";
                 }
-                $sWhere .= $aColumns[$i]." LIKE '%".mysql_real_escape_string($this->input->post("sSearch_".$i))."%' ";
+                $sWhere .= $aColumns[$i]." LIKE '%".$this->db->escape_like_str( $this->input->post("sSearch_".$i, true) )."%' ";
             }
         }
+
 
         /*
          * Joins
@@ -120,15 +119,14 @@ class CMS_Model extends CI_Model {
             $sLimit
         ";
 
-        $rResult = $this->run_sql($sQuery);
-        
+        $rResult = $this->db->query($sQuery);        
 
         /* Data set length after filtering */
         $sQuery = "
             SELECT FOUND_ROWS() as total
         ";
 
-        $rResultFilterTotal = $this->run_sql($sQuery);
+        $rResultFilterTotal = $this->db->query($sQuery);
 
         $iFilteredTotal = $rResultFilterTotal->row()->total;
         
@@ -138,7 +136,7 @@ class CMS_Model extends CI_Model {
             FROM   $sTable
         ";
 
-        $rResultTotal = $this->run_sql($sQuery);
+        $rResultTotal = $this->db->query($sQuery);
         
 
         $iTotal = $rResultTotal->row()->total;

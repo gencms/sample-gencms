@@ -74,34 +74,32 @@
 		 * @return   	  : json_data
 		 */
 
-		function items() {		
-
-			
+		function items() {					
 			$aColumns = array(news_category_id,category_name,1);	
-    
-		    /* Indexed column (used for fast and accurate table cardinality) */
-		    $sIndexColumn = "news_category_id";
 
-		    $sTable = "news_category";
+			/* Indexed column (used for fast and accurate table cardinality) */
+			$sIndexColumn = "news_category_id";
 
-		    #Get post variables and add them to the sql_data array to pass to the model		    
-		    $sql_data = array(
-		    	 "iDisplayStart"	=>	$this->input->post("iDisplayStart", true)
-		    	,"iDisplayLength"	=>	$this->input->post("iDisplayLength", true)
-		    	,"iSortCol_0"	=>	$this->input->post("iSortCol_0", true)
-		    	,"iSortingCols"	=>	$this->input->post("iSortingCols", true)
-		    	,"sSearch"	=>	$this->input->post("sSearch", true)
-		    	,"sEcho"	=>	$this->input->post("sEcho")
-		    	,"numColumns"	=>	count($aColumns)
-		    	,"sTable"	=>	$sTable
-		    	,"sIndexColumn"	=>	$sIndexColumn
-		    	,"aColumns"	=>	$aColumns
-		//    	,"join_items"	=>	$join_items
-		    );
-		    
-		    $output = $this->news_category_model->get_items($sql_data);
-		    
-		    echo json_encode( $output );				        										       
+			$sTable = "news_category";
+
+			#Get post variables and add them to the sql_data array to pass to the model		    
+			$sql_data = array(
+				 "iDisplayStart"	=>	$this->input->post("iDisplayStart", true)
+				,"iDisplayLength"	=>	$this->input->post("iDisplayLength", true)
+				,"iSortCol_0"	=>	$this->input->post("iSortCol_0", true)
+				,"iSortingCols"	=>	$this->input->post("iSortingCols", true)
+				,"sSearch"	=>	$this->input->post("sSearch", true)
+				,"sEcho"	=>	$this->input->post("sEcho",  true)
+				,"numColumns"	=>	count($aColumns)
+				,"sTable"	=>	$sTable
+				,"sIndexColumn"	=>	$sIndexColumn
+				,"aColumns"	=>	$aColumns
+				,"join_items"	=>	$join_items
+			);
+
+			$output = $this->news_category_model->get_items($sql_data);
+
+			echo json_encode( $output );				        										       
 		}	
 
 

@@ -82,37 +82,37 @@
 		 */
 
 		function items() {										
-		        $join_items[] = array(
-		                 "table"        =>  "news_category"
-		                ,"key_field"    =>  "news_category_id"
-		                ,"mapped_field" =>  "news_category"
-		                ,"join_type"    =>  "inner"
-		        );
-			
+			$join_items[] = array(
+		         "table"        =>  "news_category"
+		        ,"key_field"    =>  "news_category_id"
+		        ,"mapped_field" =>  "news_category"
+		        ,"join_type"    =>  "inner"
+			);
+
 			$aColumns = array(news_id,title,picture,category_name,news_date,active,1);	
-    
-		    /* Indexed column (used for fast and accurate table cardinality) */
-		    $sIndexColumn = "news_id";
 
-		    $sTable = "news";
+			/* Indexed column (used for fast and accurate table cardinality) */
+			$sIndexColumn = "news_id";
 
-		    #Get post variables and add them to the sql_data array to pass to the model		    
-		    $sql_data = array(
-		    	 "iDisplayStart"	=>	$this->input->post("iDisplayStart", true)
-		    	,"iDisplayLength"	=>	$this->input->post("iDisplayLength", true)
-		    	,"iSortCol_0"	=>	$this->input->post("iSortCol_0", true)
-		    	,"iSortingCols"	=>	$this->input->post("iSortingCols", true)
-		    	,"sSearch"	=>	$this->input->post("sSearch", true)
-		    	,"sEcho"	=>	$this->input->post("sEcho")
-		    	,"numColumns"	=>	count($aColumns)
-		    	,"sTable"	=>	$sTable
-		    	,"sIndexColumn"	=>	$sIndexColumn
-		    	,"aColumns"	=>	$aColumns
-		    	,"join_items"	=>	$join_items
-		    );
-		    
-		    $output = $this->news_model->get_items($sql_data);
-		    echo json_encode( $output );				        										       
+			$sTable = "news";
+
+			#Get post variables and add them to the sql_data array to pass to the model		    
+			$sql_data = array(
+				 "iDisplayStart"	=>	$this->input->post("iDisplayStart", true)
+				,"iDisplayLength"	=>	$this->input->post("iDisplayLength", true)
+				,"iSortCol_0"	=>	$this->input->post("iSortCol_0", true)
+				,"iSortingCols"	=>	$this->input->post("iSortingCols", true)
+				,"sSearch"	=>	$this->input->post("sSearch", true)
+				,"sEcho"	=>	$this->input->post("sEcho")
+				,"numColumns"	=>	count($aColumns)
+				,"sTable"	=>	$sTable
+				,"sIndexColumn"	=>	$sIndexColumn
+				,"aColumns"	=>	$aColumns
+				,"join_items"	=>	$join_items
+			);
+
+			$output = $this->news_model->get_items($sql_data);
+			echo json_encode( $output );				        										       
 		}	
 
 
