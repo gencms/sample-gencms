@@ -122,12 +122,11 @@
 		 * @param $id : int
 		 * @view   	  : edit.php
 		 */
-		public function edit($id = NULL)
-		{  		
+		public function edit($id = NULL) {  		
 			$data = array();
 			$error_messages = "";
 
-	        $data["title"] = "Manage News";
+			$data["title"] = "Manage News";
 
 			# Define form validation rules 
 			$this->form_validation->set_rules("news_id", "news_id", "trim|xss_clean");
@@ -138,65 +137,62 @@
 			$this->form_validation->set_rules("news_date", "News Date", "trim|xss_clean|required");
 			$this->form_validation->set_rules("active", "Published", "trim|xss_clean|required");			
 
-	        if(!$this->form_validation->run()) {
+			if(!$this->form_validation->run()) {
 				#validation failed
 				$error_messages .= validation_errors();
 			}
 			else {						 
-
 				$news_data = $this->news_model->array_from_post(array(
-								"news_id",
-								"title",
-								"summary",
-								"content",
-								"news_category",
-								"news_date",
-								"active"
+					"news_id",
+					"title",
+					"summary",
+					"content",
+					"news_category",
+					"news_date",
+					"active"
 				));
 
-			$news_id = $this->input->post("news_id");	
+				$news_id = $this->input->post("news_id");	
 
-			if ( isset($_FILES["picture"]["name"]) && !empty($_FILES["picture"]["name"]) ) {
+				if ( isset($_FILES["picture"]["name"]) && !empty($_FILES["picture"]["name"]) ) {
 					$config["upload_path"] = "uploads/news";
-		            $config["allowed_types"] = "gif|jpg|png";
-		            $config["max_size"]	= "0";
-		            $config["overwrite"] = FALSE;
-		            //$config["encrypt_name"] = TRUE;
-	            	$this->load->library("upload", $config);
-	            	$this->upload->initialize($config);
+					$config["allowed_types"] = "gif|jpg|png";
+					$config["max_size"]	= "0";
+					$config["overwrite"] = FALSE;
+					//$config["encrypt_name"] = TRUE;
+					$this->load->library("upload", $config);
+					$this->upload->initialize($config);
 
-	                if ( ! $this->upload->do_upload("picture"))
-	                {	                	
-	                    #errors during uploading
-	                    $error_messages .= $this->upload->display_errors();	                    
-	                }
-	                else {                	                  	
-				    	$current_logo = $this->input->post("current_picture");
-	                	$file_url = $this->upload->file_name;                	
+					if ( ! $this->upload->do_upload("picture")) {	                	
+						#errors during uploading
+						$error_messages .= $this->upload->display_errors();	                    
+					}
+					else {                	                  	
+						$current_logo = $this->input->post("current_picture");
+						$file_url = $this->upload->file_name;                	
 
 						if( !empty($file_url) ) {								
 							unlink("uploads/news/".$current_logo);
 							$news_data["picture"] = $file_url;
 						}
-	                }//end ifelse success upload                
-	        }else {
-	        	if( empty($news_id) )
-	        		;
-	        	
-	        }
-	    						
-				
-				if(empty($error_messages)){					
-			        $saved = $this->news_model->save("news","news_id" ,$news_data, $news_id);
+					}//end ifelse success upload                
+				}else {
+					if( empty($news_id) )
+					;
+				}
+						
 
-			        #If saved successfully, redirect to listing page
-			        if($saved) redirect("news");
-			    }
+				if(empty($error_messages)){					
+					$saved = $this->news_model->save("news","news_id" ,$news_data, $news_id);
+
+					#If saved successfully, redirect to listing page
+					if($saved) redirect("news");
+				}
 			}
 
-			
-				$data["news_category_options"] = $this->news_model->get_dropdown_options("news_category","news_category_id","category_name");
-			
+
+			$data["news_category_options"] = $this->news_model->get_dropdown_options("news_category","news_category_id","category_name");
+
 
 			if(!empty($id)){
 				$data["details"] = $this->news_model->get("news", $id, "news_id", "news_id");
@@ -207,7 +203,7 @@
 
 			$data["id"] = $id;
 
-	        $data["message"] = $error_messages;
+			$data["message"] = $error_messages;
 			$view = "edit";
 			$this->main_template_view($view, $data);	
 		}	
