@@ -176,7 +176,8 @@
 							$news_data["picture"] = $file_url;
 						}
 					}//end ifelse success upload                
-				}else {
+				}
+				else {
 					if( empty($news_id) )
 					;
 				}
